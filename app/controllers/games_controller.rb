@@ -12,11 +12,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.new(
-      name: params[:name], 
-      image_url: params[:image_url], 
-      likes: params[:likes]
-    )
+    @game = Game.new(game_params)
 
     if @game.save
       render json: @game, status: :created, location: @game
@@ -26,7 +22,7 @@ class GamesController < ApplicationController
   end
 
   def update
-    if @game.update(likes: params[:likes])
+    if @game.update(game_params)
       render json: @game
     else
       render json: @game.errors, status: :unprocessable_entity
@@ -41,6 +37,10 @@ class GamesController < ApplicationController
 
     def set_game
       @game = Game.find(params[:id])
+    end
+
+    def game_params 
+      params.require(:game).permit(:name, :image_url, :likes)
     end
 
 end
